@@ -5,20 +5,31 @@ import (
 
 	"github.com/gin-gonic/gin"
 
+	"paylater/services/auth-service/internal/handler"
+	"paylater/services/auth-service/internal/repository/memory"
+	"paylater/services/auth-service/internal/routes"
+	"paylater/services/auth-service/internal/service"
 	"paylater/shared/config"
-	"paylater/shared/response"
 )
 
 func main() {
 	cfg := config.LoadConfig()
 
+	// Temporary in-memory adapters standing in for future user/merchant REST clients.
+	userRepo := memory.NewUserStore()
+	merchantRepo := memory.NewMerchantStore()
+
+	authService := service.NewAuthService(
+		userRepo,
+		merchantRepo,
+		cfg.JWTSecret,
+		cfg.AdminEmail,
+		cfg.AdminPassword,
+	)
+	authHandler := handler.NewAuthHandler(authService)
+
 	router := gin.Default()
-	router.GET("/health", func(c *gin.Context) {
-		response.JSON(c, 200, gin.H{
-			"status":  "ok",
-			"service": "auth-service",
-		})
-	})
+	routes.Setup(router, authHandler)
 
 	log.Printf("auth-service listening on :%s", cfg.ServerPort)
 	if err := router.Run(":" + cfg.ServerPort); err != nil {
