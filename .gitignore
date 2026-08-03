@@ -1,0 +1,38 @@
+# Binaries
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+bin/
+dist/
+
+# Test / coverage
+*.test
+*.out
+coverage.html
+
+# Go workspace local override (optional)
+# go.work
+# go.work.sum
+
+# Dependencies (vendored only if committed intentionally)
+vendor/
+
+# Environment / secrets
+.env
+.env.*
+!.env.example
+
+# IDE / OS
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+tmp/
+temp/
