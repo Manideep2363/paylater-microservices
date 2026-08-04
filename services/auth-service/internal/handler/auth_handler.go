@@ -1,10 +1,12 @@
 package handler
 
 import (
+	"errors"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 
+	"paylater/services/auth-service/internal/repository"
 	"paylater/services/auth-service/internal/service"
 	"paylater/shared/response"
 )
@@ -39,7 +41,7 @@ func (h *AuthHandler) Register(c *gin.Context) {
 		Password: req.Password,
 	})
 	if err != nil {
-		response.Error(c, http.StatusBadRequest, err.Error())
+		writeAuthError(c, err, http.StatusBadRequest)
 		return
 	}
 
@@ -64,7 +66,7 @@ func (h *AuthHandler) Login(c *gin.Context) {
 		Password: req.Password,
 	})
 	if err != nil {
-		response.Error(c, http.StatusUnauthorized, err.Error())
+		writeAuthError(c, err, http.StatusUnauthorized)
 		return
 	}
 
@@ -97,7 +99,7 @@ func (h *AuthHandler) MerchantRegister(c *gin.Context) {
 	}
 
 	if err := h.service.MerchantRegister(c.Request.Context(), req); err != nil {
-		response.Error(c, http.StatusInternalServerError, err.Error())
+		writeAuthError(c, err, http.StatusInternalServerError)
 		return
 	}
 
@@ -114,9 +116,17 @@ func (h *AuthHandler) MerchantLogin(c *gin.Context) {
 
 	token, err := h.service.MerchantLogin(c.Request.Context(), req)
 	if err != nil {
-		response.Error(c, http.StatusUnauthorized, err.Error())
+		writeAuthError(c, err, http.StatusUnauthorized)
 		return
 	}
 
 	response.JSON(c, http.StatusOK, gin.H{"token": token})
+}
+
+func writeAuthError(c *gin.Context, err error, fallbackStatus int) {
+	if errors.Is(err, repository.ErrUnavailable) {
+		response.Error(c, http.StatusServiceUnavailable, "service unavailable")
+		return
+	}
+	response.Error(c, fallbackStatus, err.Error())
 }

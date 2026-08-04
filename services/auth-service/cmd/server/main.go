@@ -5,19 +5,22 @@ import (
 
 	"github.com/gin-gonic/gin"
 
+	"paylater/services/auth-service/internal/client"
+	"paylater/services/auth-service/internal/config"
 	"paylater/services/auth-service/internal/handler"
-	"paylater/services/auth-service/internal/repository/memory"
 	"paylater/services/auth-service/internal/routes"
 	"paylater/services/auth-service/internal/service"
-	"paylater/shared/config"
 )
 
 func main() {
-	cfg := config.LoadConfig()
+	cfg := config.Load()
 
-	// Temporary in-memory adapters standing in for future user/merchant REST clients.
-	userRepo := memory.NewUserStore()
-	merchantRepo := memory.NewMerchantStore()
+	if cfg.InternalAPIToken == "" {
+		log.Fatal("INTERNAL_API_TOKEN is required for user/merchant service calls")
+	}
+
+	userRepo := client.NewUserClient(cfg.UserServiceURL, cfg.InternalAPIToken)
+	merchantRepo := client.NewMerchantClient(cfg.MerchantServiceURL, cfg.InternalAPIToken)
 
 	authService := service.NewAuthService(
 		userRepo,
@@ -31,7 +34,12 @@ func main() {
 	router := gin.Default()
 	routes.Setup(router, authHandler)
 
-	log.Printf("auth-service listening on :%s", cfg.ServerPort)
+	log.Printf(
+		"auth-service listening on :%s (users=%s merchants=%s)",
+		cfg.ServerPort,
+		cfg.UserServiceURL,
+		cfg.MerchantServiceURL,
+	)
 	if err := router.Run(":" + cfg.ServerPort); err != nil {
 		log.Fatal(err)
 	}

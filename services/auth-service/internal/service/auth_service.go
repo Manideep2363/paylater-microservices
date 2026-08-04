@@ -3,7 +3,6 @@ package service
 import (
 	"context"
 	"errors"
-	"fmt"
 
 	"paylater/services/auth-service/internal/repository"
 	"paylater/shared/auth"
@@ -42,7 +41,7 @@ type RegisterRequest struct {
 	Password string
 }
 
-// Register creates a new user with a hashed password.
+// Register creates a new user via user-service (which owns hashing + storage).
 func (s *AuthService) Register(ctx context.Context, req RegisterRequest) error {
 	exists, err := s.users.EmailExists(ctx, req.Email)
 	if err != nil {
@@ -52,12 +51,7 @@ func (s *AuthService) Register(ctx context.Context, req RegisterRequest) error {
 		return errors.New("email already exists")
 	}
 
-	hashedPassword, err := auth.HashPassword(req.Password)
-	if err != nil {
-		return err
-	}
-
-	_, err = s.users.CreateUser(ctx, req.Name, req.Email, hashedPassword)
+	_, err = s.users.CreateUser(ctx, req.Name, req.Email, req.Password)
 	return err
 }
 
@@ -71,6 +65,9 @@ type LoginRequest struct {
 func (s *AuthService) Login(ctx context.Context, req LoginRequest) (string, error) {
 	user, err := s.users.GetUserByEmail(ctx, req.Email)
 	if err != nil {
+		if errors.Is(err, repository.ErrUnavailable) {
+			return "", err
+		}
 		return "", errors.New("invalid email or password")
 	}
 
@@ -116,20 +113,15 @@ type MerchantRegisterRequest struct {
 	CommissionPercentage float64 `json:"commission_percentage" binding:"required"`
 }
 
-// MerchantRegister creates a merchant with a hashed password.
+// MerchantRegister creates a merchant via merchant-service (which owns hashing + storage).
 func (s *AuthService) MerchantRegister(ctx context.Context, req MerchantRegisterRequest) error {
-	hashedPassword, err := auth.HashPassword(req.Password)
-	if err != nil {
-		return err
-	}
-
-	_, err = s.merchants.CreateMerchant(
+	_, err := s.merchants.CreateMerchant(
 		ctx,
 		req.Name,
 		req.Email,
 		req.Phone,
-		hashedPassword,
-		fmt.Sprintf("%.2f", req.CommissionPercentage),
+		req.Password,
+		req.CommissionPercentage,
 	)
 	return err
 }
@@ -144,6 +136,9 @@ type MerchantLoginRequest struct {
 func (s *AuthService) MerchantLogin(ctx context.Context, req MerchantLoginRequest) (string, error) {
 	merchant, err := s.merchants.GetMerchantByEmail(ctx, req.Email)
 	if err != nil {
+		if errors.Is(err, repository.ErrUnavailable) {
+			return "", err
+		}
 		return "", errors.New("invalid email or password")
 	}
 

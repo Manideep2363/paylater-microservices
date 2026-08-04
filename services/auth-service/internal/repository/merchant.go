@@ -2,8 +2,7 @@ package repository
 
 import "context"
 
-// Merchant is the auth-relevant merchant record.
-// In later phases this will be owned by merchant-service.
+// Merchant is the auth-relevant merchant record owned by merchant-service.
 type Merchant struct {
 	MerchantID           int32
 	Name                 string
@@ -13,12 +12,13 @@ type Merchant struct {
 	CommissionPercentage string
 }
 
-// MerchantRepository abstracts merchant credential storage.
-// Temporary in-memory impl today; future REST client to merchant-service.
+// MerchantRepository abstracts merchant credential access via merchant-service REST.
 type MerchantRepository interface {
+	// CreateMerchant creates a merchant with a plain password; merchant-service hashes it.
 	CreateMerchant(
 		ctx context.Context,
-		name, email, phone, passwordHash, commissionPercentage string,
+		name, email, phone, password string,
+		commission float64,
 	) (Merchant, error)
 	GetMerchantByEmail(ctx context.Context, email string) (Merchant, error)
 }
