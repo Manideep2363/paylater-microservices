@@ -2,6 +2,8 @@ package repository
 
 import (
 	"context"
+	"sort"
+	"strconv"
 	"sync"
 	"time"
 )
@@ -145,6 +147,31 @@ func (m *MemoryStore) ListUserPayments(ctx context.Context, userID int32) ([]Pay
 			out = append(out, p)
 		}
 	}
+	return out, nil
+}
+
+func (m *MemoryStore) GetMerchantCommissionSummary(ctx context.Context) ([]MerchantCommissionRow, error) {
+	_ = ctx
+	m.mu.Lock()
+	defer m.mu.Unlock()
+
+	sums := make(map[int32]float64)
+	for _, tx := range m.transactions {
+		amt, _ := strconv.ParseFloat(tx.CommissionAmount, 64)
+		sums[tx.MerchantID] += amt
+	}
+	out := make([]MerchantCommissionRow, 0, len(sums))
+	for id, total := range sums {
+		out = append(out, MerchantCommissionRow{
+			MerchantID:      id,
+			TotalCommission: strconv.FormatFloat(total, 'f', 2, 64),
+		})
+	}
+	sort.Slice(out, func(i, j int) bool {
+		ai, _ := strconv.ParseFloat(out[i].TotalCommission, 64)
+		aj, _ := strconv.ParseFloat(out[j].TotalCommission, 64)
+		return ai > aj
+	})
 	return out, nil
 }
 

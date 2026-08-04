@@ -194,3 +194,8 @@ func (s *LedgerService) GetPaymentByID(ctx context.Context, id int32) (repositor
 func (s *LedgerService) ListUserPayments(ctx context.Context, userID int32) ([]repository.Payment, error) {
 	return s.store.ListUserPayments(ctx, userID)
 }
+
+// MerchantCommissionSummary returns aggregated commission by merchant.
+func (s *LedgerService) MerchantCommissionSummary(ctx context.Context) ([]repository.MerchantCommissionRow, error) {
+	return s.store.GetMerchantCommissionSummary(ctx)
+}

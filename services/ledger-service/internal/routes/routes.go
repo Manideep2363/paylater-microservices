@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"paylater/services/ledger-service/internal/handler"
+	ledgermw "paylater/services/ledger-service/internal/middleware"
 	"paylater/shared/middleware"
 	"paylater/shared/response"
 )
@@ -43,4 +44,8 @@ func Setup(router *gin.Engine, h *handler.LedgerHandler, jwtSecret string) {
 		middleware.RequireRole("merchant"),
 	)
 	merchant.GET("/transactions", h.ListMerchantTransactions)
+
+	internal := router.Group("/internal")
+	internal.Use(ledgermw.RequireInternalToken())
+	internal.GET("/reports/merchant-commissions", h.MerchantCommissions)
 }

@@ -39,4 +39,7 @@ func Setup(router *gin.Engine, h *handler.UserHandler, jwtSecret string) {
 	internal.GET("/users/:id", h.InternalGetUserByID)
 	internal.POST("/users/:id/due/increase", h.IncreaseDue)
 	internal.POST("/users/:id/due/decrease", h.DecreaseDue)
+	internal.GET("/reports/outstanding-balance", h.OutstandingBalance)
+	internal.GET("/reports/users-due", h.UserOutstandingDues)
+	internal.GET("/reports/users-at-credit-limit", h.UsersAtCreditLimit)
 }

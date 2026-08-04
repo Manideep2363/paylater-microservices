@@ -46,6 +46,21 @@ type TxRepository interface {
 	DecreaseUserDue(ctx context.Context, userID int32, newDue string) error
 }
 
+// UserDueRow is a users-due report row (no email/password).
+type UserDueRow struct {
+	UserID     int32
+	Name       string
+	CurrentDue string
+}
+
+// UserAtLimitRow is a users-at-credit-limit report row.
+type UserAtLimitRow struct {
+	UserID      int32
+	Name        string
+	CreditLimit string
+	CurrentDue  string
+}
+
 // Repository is the user-service data access boundary.
 type Repository interface {
 	CreateUser(ctx context.Context, name, email, passwordHash string) (UserView, error)
@@ -54,6 +69,10 @@ type Repository interface {
 	ListUsers(ctx context.Context) ([]UserView, error)
 	EmailExists(ctx context.Context, email string) (bool, error)
 	WithinTx(ctx context.Context, fn func(txRepo TxRepository) error) error
+
+	GetOutstandingBalance(ctx context.Context) (string, error)
+	GetUserOutstandingDues(ctx context.Context) ([]UserDueRow, error)
+	GetUsersAtCreditLimit(ctx context.Context) ([]UserAtLimitRow, error)
 }
 
 // SQLRepository implements Repository using SQLC + database/sql.
@@ -212,4 +231,48 @@ func (t *sqlTxRepository) DecreaseUserDue(
 		UserID:     userID,
 	})
 	return err
+}
+
+func (r *SQLRepository) GetOutstandingBalance(ctx context.Context) (string, error) {
+	total, err := r.queries.GetOutstandingBalance(ctx)
+	if err != nil {
+		return "", err
+	}
+	if total == "" {
+		return "0.00", nil
+	}
+	return total, nil
+}
+
+func (r *SQLRepository) GetUserOutstandingDues(ctx context.Context) ([]UserDueRow, error) {
+	rows, err := r.queries.GetUserOutstandingDues(ctx)
+	if err != nil {
+		return nil, err
+	}
+	out := make([]UserDueRow, 0, len(rows))
+	for _, row := range rows {
+		out = append(out, UserDueRow{
+			UserID:     row.UserID,
+			Name:       row.Name,
+			CurrentDue: row.CurrentDue,
+		})
+	}
+	return out, nil
+}
+
+func (r *SQLRepository) GetUsersAtCreditLimit(ctx context.Context) ([]UserAtLimitRow, error) {
+	rows, err := r.queries.GetUsersAtCreditLimit(ctx)
+	if err != nil {
+		return nil, err
+	}
+	out := make([]UserAtLimitRow, 0, len(rows))
+	for _, row := range rows {
+		out = append(out, UserAtLimitRow{
+			UserID:      row.UserID,
+			Name:        row.Name,
+			CreditLimit: row.CreditLimit,
+			CurrentDue:  row.CurrentDue,
+		})
+	}
+	return out, nil
 }

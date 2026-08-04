@@ -46,6 +46,14 @@ type Store interface {
 	CreatePayment(ctx context.Context, userID int32, amount string) (Payment, error)
 	GetPaymentByID(ctx context.Context, id int32) (Payment, error)
 	ListUserPayments(ctx context.Context, userID int32) ([]Payment, error)
+
+	GetMerchantCommissionSummary(ctx context.Context) ([]MerchantCommissionRow, error)
+}
+
+// MerchantCommissionRow is an aggregated commission report row.
+type MerchantCommissionRow struct {
+	MerchantID      int32
+	TotalCommission string
 }
 
 // SQLStore implements Store with SQLC.
@@ -192,4 +200,19 @@ func mapPayment(row db.Payment) Payment {
 		Amount:    row.Amount,
 		PaidAt:    paid,
 	}
+}
+
+func (s *SQLStore) GetMerchantCommissionSummary(ctx context.Context) ([]MerchantCommissionRow, error) {
+	rows, err := s.queries.GetMerchantCommissionSummary(ctx)
+	if err != nil {
+		return nil, err
+	}
+	out := make([]MerchantCommissionRow, 0, len(rows))
+	for _, row := range rows {
+		out = append(out, MerchantCommissionRow{
+			MerchantID:      row.MerchantID,
+			TotalCommission: row.TotalCommission,
+		})
+	}
+	return out, nil
 }

@@ -244,6 +244,23 @@ func (h *LedgerHandler) ListMerchantTransactions(c *gin.Context) {
 	response.JSON(c, http.StatusOK, out)
 }
 
+// MerchantCommissions handles GET /internal/reports/merchant-commissions.
+func (h *LedgerHandler) MerchantCommissions(c *gin.Context) {
+	rows, err := h.service.MerchantCommissionSummary(c.Request.Context())
+	if err != nil {
+		response.Error(c, http.StatusInternalServerError, "internal error")
+		return
+	}
+	out := make([]gin.H, 0, len(rows))
+	for _, r := range rows {
+		out = append(out, gin.H{
+			"merchant_id":      r.MerchantID,
+			"total_commission": r.TotalCommission,
+		})
+	}
+	response.JSON(c, http.StatusOK, out)
+}
+
 func writeErr(c *gin.Context, err error) {
 	switch {
 	case errors.Is(err, service.ErrAmountMustBePositive),

@@ -80,6 +80,28 @@ func (s *UserService) ListUsers(ctx context.Context) ([]repository.UserView, err
 	return s.repo.ListUsers(ctx)
 }
 
+// GetOutstandingBalance returns SUM(current_due) as a DECIMAL string.
+func (s *UserService) GetOutstandingBalance(ctx context.Context) (string, error) {
+	total, err := s.repo.GetOutstandingBalance(ctx)
+	if err != nil {
+		return "", err
+	}
+	if total == "" {
+		return "0.00", nil
+	}
+	return total, nil
+}
+
+// GetUserOutstandingDues returns all users ordered by current_due DESC.
+func (s *UserService) GetUserOutstandingDues(ctx context.Context) ([]repository.UserDueRow, error) {
+	return s.repo.GetUserOutstandingDues(ctx)
+}
+
+// GetUsersAtCreditLimit returns users with current_due >= credit_limit.
+func (s *UserService) GetUsersAtCreditLimit(ctx context.Context) ([]repository.UserAtLimitRow, error) {
+	return s.repo.GetUsersAtCreditLimit(ctx)
+}
+
 // IncreaseDue atomically raises current_due after a credit-limit check.
 // Mirrors monolith purchase credit rules.
 func (s *UserService) IncreaseDue(ctx context.Context, userID int32, amount float64) error {

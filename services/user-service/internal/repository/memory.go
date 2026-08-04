@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 	"fmt"
+	"sort"
 	"strconv"
 	"strings"
 	"sync"
@@ -208,4 +209,77 @@ func (m *MemoryRepository) SetDueForTest(userID int32, due float64) error {
 	u.CurrentDue = strconv.FormatFloat(due, 'f', 2, 64)
 	m.byID[userID] = u
 	return nil
+}
+
+// SetCreditLimitForTest sets credit_limit (test helper).
+func (m *MemoryRepository) SetCreditLimitForTest(userID int32, limit float64) error {
+	m.mu.Lock()
+	defer m.mu.Unlock()
+	u, ok := m.byID[userID]
+	if !ok {
+		return ErrNotFound
+	}
+	u.CreditLimit = strconv.FormatFloat(limit, 'f', 2, 64)
+	m.byID[userID] = u
+	return nil
+}
+
+func (m *MemoryRepository) GetOutstandingBalance(ctx context.Context) (string, error) {
+	_ = ctx
+	m.mu.Lock()
+	defer m.mu.Unlock()
+	var sum float64
+	for _, u := range m.byID {
+		due, _ := strconv.ParseFloat(u.CurrentDue, 64)
+		sum += due
+	}
+	return strconv.FormatFloat(sum, 'f', 2, 64), nil
+}
+
+func (m *MemoryRepository) GetUserOutstandingDues(ctx context.Context) ([]UserDueRow, error) {
+	_ = ctx
+	m.mu.Lock()
+	defer m.mu.Unlock()
+	out := make([]UserDueRow, 0, len(m.byID))
+	for id := int32(1); id < m.nextID; id++ {
+		u, ok := m.byID[id]
+		if !ok {
+			continue
+		}
+		out = append(out, UserDueRow{
+			UserID:     u.UserID,
+			Name:       u.Name,
+			CurrentDue: u.CurrentDue,
+		})
+	}
+	sort.Slice(out, func(i, j int) bool {
+		ai, _ := strconv.ParseFloat(out[i].CurrentDue, 64)
+		aj, _ := strconv.ParseFloat(out[j].CurrentDue, 64)
+		return ai > aj
+	})
+	return out, nil
+}
+
+func (m *MemoryRepository) GetUsersAtCreditLimit(ctx context.Context) ([]UserAtLimitRow, error) {
+	_ = ctx
+	m.mu.Lock()
+	defer m.mu.Unlock()
+	out := make([]UserAtLimitRow, 0)
+	for id := int32(1); id < m.nextID; id++ {
+		u, ok := m.byID[id]
+		if !ok {
+			continue
+		}
+		due, _ := strconv.ParseFloat(u.CurrentDue, 64)
+		limit, _ := strconv.ParseFloat(u.CreditLimit, 64)
+		if due >= limit {
+			out = append(out, UserAtLimitRow{
+				UserID:      u.UserID,
+				Name:        u.Name,
+				CreditLimit: u.CreditLimit,
+				CurrentDue:  u.CurrentDue,
+			})
+		}
+	}
+	return out, nil
 }

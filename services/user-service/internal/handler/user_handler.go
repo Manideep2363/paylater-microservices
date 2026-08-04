@@ -279,3 +279,52 @@ func writeDueError(c *gin.Context, err error) {
 		response.Error(c, http.StatusInternalServerError, err.Error())
 	}
 }
+
+// OutstandingBalance handles GET /internal/reports/outstanding-balance.
+func (h *UserHandler) OutstandingBalance(c *gin.Context) {
+	total, err := h.service.GetOutstandingBalance(c.Request.Context())
+	if err != nil {
+		response.Error(c, http.StatusInternalServerError, "internal error")
+		return
+	}
+	response.JSON(c, http.StatusOK, gin.H{
+		"total_outstanding_balance": total,
+	})
+}
+
+// UserOutstandingDues handles GET /internal/reports/users-due.
+func (h *UserHandler) UserOutstandingDues(c *gin.Context) {
+	rows, err := h.service.GetUserOutstandingDues(c.Request.Context())
+	if err != nil {
+		response.Error(c, http.StatusInternalServerError, "internal error")
+		return
+	}
+	out := make([]gin.H, 0, len(rows))
+	for _, r := range rows {
+		out = append(out, gin.H{
+			"user_id":     r.UserID,
+			"name":        r.Name,
+			"current_due": r.CurrentDue,
+		})
+	}
+	response.JSON(c, http.StatusOK, out)
+}
+
+// UsersAtCreditLimit handles GET /internal/reports/users-at-credit-limit.
+func (h *UserHandler) UsersAtCreditLimit(c *gin.Context) {
+	rows, err := h.service.GetUsersAtCreditLimit(c.Request.Context())
+	if err != nil {
+		response.Error(c, http.StatusInternalServerError, "internal error")
+		return
+	}
+	out := make([]gin.H, 0, len(rows))
+	for _, r := range rows {
+		out = append(out, gin.H{
+			"user_id":      r.UserID,
+			"name":         r.Name,
+			"credit_limit": r.CreditLimit,
+			"current_due":  r.CurrentDue,
+		})
+	}
+	response.JSON(c, http.StatusOK, out)
+}
