@@ -1,0 +1,735 @@
+{
+  "info": {
+    "_postman_id": "66f8f63f-824d-4830-9443-83cee82e74c8",
+    "name": "Micro_services",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "50196983",
+    "_collection_link": "https://go.postman.co/collection/50196983-66f8f63f-824d-4830-9443-83cee82e74c8?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "New Request",
+      "request": {
+        "method": "GET",
+        "header": []
+      },
+      "response": []
+    },
+    {
+      "name": "user_registered",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"name\": \"Manideep\",\r\n    \"email\": \"manideep@gmail.com\",\r\n    \"password\": \"test123\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8081/register",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8081",
+          "path": [
+            "register"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "login",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"email\": \"manideep@gmail.com\",\r\n    \"password\": \"test123\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8081/login",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8081",
+          "path": [
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "internal_users",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "X-Internal-Token",
+            "value": "paylater-internal-secret",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"name\": \"Manideep\",\r\n    \"email\": \"manideep@gmail.com\",\r\n    \"password\": \"password123\"\r\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8082/internal/users",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8082",
+          "path": [
+            "internal",
+            "users"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "internal_merchants",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "X-Internal-Token",
+            "value": "change-me-internal-token",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"name\": \"Amazon\",\r\n    \"email\": \"amazon@example.com\",\r\n    \"phone\": \"9876543210\",\r\n    \"password\": \"Password@123\",\r\n    \"commission\": 5\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8083/internal/merchants",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8083",
+          "path": [
+            "internal",
+            "merchants"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "user_register",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"name\": \"Test User\",\r\n  \"email\": \"testuser@gmail.com\",\r\n  \"password\": \"password123\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8081/register",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8081",
+          "path": [
+            "register"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "user_login",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"email\": \"testuser@gmail.com\",\r\n  \"password\": \"password123\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8081/login",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8081",
+          "path": [
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Merchant_register",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"name\": \"Test Shop\",\r\n  \"email\": \"testshop@gmail.com\",\r\n  \"phone\": \"9876543210\",\r\n  \"password\": \"password123\",\r\n  \"commission_percentage\": 5\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8081/merchant/register",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8081",
+          "path": [
+            "merchant",
+            "register"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "merchant_login",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"email\": \"testshop@gmail.com\",\r\n  \"password\": \"password123\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8081/merchant/login",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8081",
+          "path": [
+            "merchant",
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "user_login",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"email\": \"testuser@gmail.com\",\r\n  \"password\": \"password123\"\r\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8081/login",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8081",
+          "path": [
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Purchase",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"merchant_id\": 1,\r\n  \"amount\": 500\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8084/purchases",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8084",
+          "path": [
+            "purchases"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "payment",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"amount\": 200\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8084/payments",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8084",
+          "path": [
+            "payments"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "admin_login",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"email\": \"admin@paylater.com\",\r\n  \"password\": \"admin123\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8081/admin/login",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8081",
+          "path": [
+            "admin",
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "outstanding-balance",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8085/admin/reports/outstanding-balance",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8085",
+          "path": [
+            "admin",
+            "reports",
+            "outstanding-balance"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "users-due",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8085/admin/reports/users-due",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8085",
+          "path": [
+            "admin",
+            "reports",
+            "users-due"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "users-at-credit-limit",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8085/admin/reports/users-at-credit-limit",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8085",
+          "path": [
+            "admin",
+            "reports",
+            "users-at-credit-limit"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "merchant-commissions",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8085/admin/reports/merchant-commissions",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8085",
+          "path": [
+            "admin",
+            "reports",
+            "merchant-commissions"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "merchant_login_apigateway",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"email\": \"testshop@gmail.com\",\r\n  \"password\": \"password123\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/merchant/login",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "merchant",
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "user_login_apigateway",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"email\": \"testuser@gmail.com\",\r\n  \"password\": \"password123\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/login",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Adminlogin_apigateway",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"email\": \"admin@paylater.com\",\r\n  \"password\": \"admin123\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/admin/login",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "admin",
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "purchases_apigateway",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"merchant_id\": 1,\r\n  \"amount\": 100\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/purchases",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "purchases"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "payments-using-apigateway",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"amount\": 40\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/payments",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "payments"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "user_payments_apigateway",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/payments",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "payments"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "merchant_profile_apigateway",
+      "request": {
+        "method": "GET",
+        "header": []
+      },
+      "response": []
+    },
+    {
+      "name": "admin_purchase",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/admin/purchases",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "admin",
+            "purchases"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "users_due_report",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/admin/reports/users-due",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "admin",
+            "reports",
+            "users-due"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "merchant_commissions_report",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/admin/reports/merchant-commissions",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "admin",
+            "reports",
+            "merchant-commissions"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Update_merchant_commisssion_apigateway",
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"commission\": 10\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/admin/merchants/:id/commission",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "admin",
+            "merchants",
+            ":id",
+            "commission"
+          ],
+          "variable": [
+            {
+              "key": "id",
+              "value": "1"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Merchant_by_id",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/admin/merchants/1",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "admin",
+            "merchants",
+            "1"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}
