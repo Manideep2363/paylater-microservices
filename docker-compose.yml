@@ -1,0 +1,257 @@
+services:
+
+  # =========================================================
+  # MySQL
+  # =========================================================
+  mysql:
+    image: mysql:8.4
+    container_name: paylater-mysql
+
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+
+    ports:
+      - "3307:3306"
+
+    volumes:
+      - paylater-mysql-data:/var/lib/mysql
+      - ./docker/mysql/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+
+    networks:
+      - paylater-network
+
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -u root -p$$MYSQL_ROOT_PASSWORD || exit 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 20s
+
+
+  # =========================================================
+  # User Service
+  # =========================================================
+  user-service:
+    build:
+      context: .
+      dockerfile: services/user-service/Dockerfile
+
+    container_name: paylater-user
+
+    environment:
+      SERVER_PORT: 8082
+
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_USER: root
+      DB_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      DB_NAME: paylater_users
+
+      JWT_SECRET: ${JWT_SECRET}
+      INTERNAL_API_TOKEN: ${INTERNAL_API_TOKEN}
+
+    ports:
+      - "8082:8082"
+
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+    networks:
+      - paylater-network
+
+
+  # =========================================================
+  # Merchant Service
+  # =========================================================
+  merchant-service:
+    build:
+      context: .
+      dockerfile: services/merchant-service/Dockerfile
+
+    container_name: paylater-merchant
+
+    environment:
+      SERVER_PORT: 8083
+
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_USER: root
+      DB_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      DB_NAME: paylater_merchants
+
+      JWT_SECRET: ${JWT_SECRET}
+      INTERNAL_API_TOKEN: ${INTERNAL_API_TOKEN}
+
+    ports:
+      - "8083:8083"
+
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+    networks:
+      - paylater-network
+
+
+  # =========================================================
+  # Auth Service
+  # =========================================================
+  auth-service:
+    build:
+      context: .
+      dockerfile: services/auth-service/Dockerfile
+
+    container_name: paylater-auth
+
+    environment:
+      SERVER_PORT: 8081
+
+      JWT_SECRET: ${JWT_SECRET}
+
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+
+      USER_SERVICE_URL: http://user-service:8082
+      MERCHANT_SERVICE_URL: http://merchant-service:8083
+
+      INTERNAL_API_TOKEN: ${INTERNAL_API_TOKEN}
+
+    ports:
+      - "8081:8081"
+
+    depends_on:
+      user-service:
+        condition: service_started
+      merchant-service:
+        condition: service_started
+
+    networks:
+      - paylater-network
+
+
+  # =========================================================
+  # Ledger Service
+  # =========================================================
+  ledger-service:
+    build:
+      context: .
+      dockerfile: services/ledger-service/Dockerfile
+
+    container_name: paylater-ledger
+
+    environment:
+      SERVER_PORT: 8084
+
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_USER: root
+      DB_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      DB_NAME: paylater_ledger
+
+      JWT_SECRET: ${JWT_SECRET}
+
+      USER_SERVICE_URL: http://user-service:8082
+      MERCHANT_SERVICE_URL: http://merchant-service:8083
+
+      INTERNAL_API_TOKEN: ${INTERNAL_API_TOKEN}
+
+    ports:
+      - "8084:8084"
+
+    depends_on:
+      mysql:
+        condition: service_healthy
+      user-service:
+        condition: service_started
+      merchant-service:
+        condition: service_started
+
+    networks:
+      - paylater-network
+
+
+  # =========================================================
+  # Report Service
+  # =========================================================
+  report-service:
+    build:
+      context: .
+      dockerfile: services/report-service/Dockerfile
+
+    container_name: paylater-report
+
+    environment:
+      SERVER_PORT: 8085
+
+      JWT_SECRET: ${JWT_SECRET}
+
+      USER_SERVICE_URL: http://user-service:8082
+      LEDGER_SERVICE_URL: http://ledger-service:8084
+
+      INTERNAL_API_TOKEN: ${INTERNAL_API_TOKEN}
+
+    ports:
+      - "8085:8085"
+
+    depends_on:
+      user-service:
+        condition: service_started
+      ledger-service:
+        condition: service_started
+
+    networks:
+      - paylater-network
+
+
+  # =========================================================
+  # API Gateway
+  # =========================================================
+  api-gateway:
+    build:
+      context: .
+      dockerfile: services/api-gateway/Dockerfile
+
+    container_name: paylater-gateway
+
+    environment:
+      SERVER_PORT: 8080
+
+      AUTH_SERVICE_URL: http://auth-service:8081
+      USER_SERVICE_URL: http://user-service:8082
+      MERCHANT_SERVICE_URL: http://merchant-service:8083
+      LEDGER_SERVICE_URL: http://ledger-service:8084
+      REPORT_SERVICE_URL: http://report-service:8085
+
+    ports:
+      - "8080:8080"
+
+    depends_on:
+      auth-service:
+        condition: service_started
+      user-service:
+        condition: service_started
+      merchant-service:
+        condition: service_started
+      ledger-service:
+        condition: service_started
+      report-service:
+        condition: service_started
+
+    networks:
+      - paylater-network
+
+
+# =========================================================
+# Network
+# =========================================================
+networks:
+  paylater-network:
+    driver: bridge
+
+
+# =========================================================
+# Volume
+# =========================================================
+volumes:
+  paylater-mysql-data:
