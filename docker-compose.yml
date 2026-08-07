@@ -55,6 +55,8 @@ services:
 
     networks:
       - paylater-network
+    
+    restart: on-failure
 
 
   # =========================================================
