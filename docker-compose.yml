@@ -21,21 +21,17 @@ services:
       - paylater-network
 
     healthcheck:
-      test: ["CMD-SHELL", "mysqladmin ping -h localhost -u root -p$$MYSQL_ROOT_PASSWORD || exit 1"]
-      interval: 5s
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -uroot -p$$MYSQL_ROOT_PASSWORD --silent"]
+      interval: 10s
       timeout: 5s
-      retries: 20
-      start_period: 20s
+      retries: 10
 
 
   # =========================================================
   # User Service
   # =========================================================
   user-service:
-    build:
-      context: .
-      dockerfile: services/user-service/Dockerfile
-
+    image: manideep2363/paylater-user-service:v1
     container_name: paylater-user
 
     environment:
@@ -65,10 +61,7 @@ services:
   # Merchant Service
   # =========================================================
   merchant-service:
-    build:
-      context: .
-      dockerfile: services/merchant-service/Dockerfile
-
+    image: manideep2363/paylater-merchant-service:v1
     container_name: paylater-merchant
 
     environment:
@@ -98,10 +91,7 @@ services:
   # Auth Service
   # =========================================================
   auth-service:
-    build:
-      context: .
-      dockerfile: services/auth-service/Dockerfile
-
+    image: manideep2363/paylater-auth-service:v1
     container_name: paylater-auth
 
     environment:
@@ -134,10 +124,7 @@ services:
   # Ledger Service
   # =========================================================
   ledger-service:
-    build:
-      context: .
-      dockerfile: services/ledger-service/Dockerfile
-
+    image: manideep2363/paylater-ledger-service:v1
     container_name: paylater-ledger
 
     environment:
@@ -175,10 +162,7 @@ services:
   # Report Service
   # =========================================================
   report-service:
-    build:
-      context: .
-      dockerfile: services/report-service/Dockerfile
-
+    image: manideep2363/paylater-report-service:v1
     container_name: paylater-report
 
     environment:
@@ -208,10 +192,7 @@ services:
   # API Gateway
   # =========================================================
   api-gateway:
-    build:
-      context: .
-      dockerfile: services/api-gateway/Dockerfile
-
+    image: manideep2363/paylater-api-gateway:v1
     container_name: paylater-gateway
 
     environment:
@@ -243,7 +224,7 @@ services:
 
 
 # =========================================================
-# Network
+# Networks
 # =========================================================
 networks:
   paylater-network:
@@ -251,7 +232,7 @@ networks:
 
 
 # =========================================================
-# Volume
+# Volumes
 # =========================================================
 volumes:
   paylater-mysql-data:
