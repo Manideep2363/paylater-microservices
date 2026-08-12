@@ -1,0 +1,13 @@
+:root {
+  /* Legacy aliases mapped to PayLater theme */
+  --text: var(--pl-text);
+  --text-h: var(--pl-text-strong);
+  --bg: var(--pl-bg);
+  --border: var(--pl-border);
+  --accent: var(--pl-accent);
+  --accent-bg: var(--pl-accent-muted);
+  --accent-border: rgba(15, 61, 94, 0.35);
+  --shadow: var(--pl-shadow);
+  --sans: var(--pl-font);
+  --heading: var(--pl-font);
+}

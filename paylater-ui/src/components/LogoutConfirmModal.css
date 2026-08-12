@@ -1,0 +1,82 @@
+.logout-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.logout-modal__backdrop {
+  position: absolute;
+  inset: 0;
+  border: none;
+  padding: 0;
+  margin: 0;
+  background: rgba(17, 24, 39, 0.45);
+  cursor: pointer;
+}
+
+.logout-modal__dialog {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 380px;
+  padding: 24px;
+  border: 1px solid #d7dde5;
+  border-radius: 10px;
+  background: #ffffff;
+  box-shadow: 0 12px 32px rgba(17, 24, 39, 0.18);
+  color: #4b5563;
+}
+
+.logout-modal__title {
+  margin: 0 0 8px;
+  font-size: 1.25rem;
+  color: #111827;
+}
+
+.logout-modal__message {
+  margin: 0 0 20px;
+  line-height: 1.45;
+}
+
+.logout-modal__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.logout-modal__button {
+  min-height: 40px;
+  padding: 8px 14px;
+  border: 1px solid #d7dde5;
+  border-radius: 10px;
+  background: #ffffff;
+  color: #111827;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.logout-modal__button:hover {
+  border-color: #0f3d5e;
+  color: #0f3d5e;
+}
+
+.logout-modal__button:focus-visible {
+  outline: 2px solid #0f3d5e;
+  outline-offset: 2px;
+}
+
+.logout-modal__button--danger {
+  border: none;
+  background: #0f3d5e;
+  color: #ffffff;
+}
+
+.logout-modal__button--danger:hover {
+  background: #0b3049;
+  color: #ffffff;
+}

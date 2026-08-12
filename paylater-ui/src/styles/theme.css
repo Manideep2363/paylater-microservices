@@ -1,0 +1,75 @@
+/* PayLater design tokens */
+:root {
+  --pl-bg: #f3f5f7;
+  --pl-surface: #ffffff;
+  --pl-text: #4b5563;
+  --pl-text-strong: #111827;
+  --pl-text-muted: #6b7280;
+  --pl-border: #d7dde5;
+  --pl-accent: #0f3d5e;
+  --pl-accent-hover: #0b3049;
+  --pl-accent-muted: #e8eef3;
+  --pl-success: #067647;
+  --pl-success-bg: #ecfdf3;
+  --pl-warning: #b54708;
+  --pl-warning-bg: #fffaeb;
+  --pl-error: #b42318;
+  --pl-error-bg: #fef3f2;
+  --pl-radius: 10px;
+  --pl-radius-sm: 8px;
+  --pl-space-xs: 8px;
+  --pl-space-sm: 12px;
+  --pl-space-md: 16px;
+  --pl-space-lg: 24px;
+  --pl-space-xl: 32px;
+  --pl-shadow: 0 1px 2px rgba(17, 24, 39, 0.06);
+  --pl-sidebar-width: 240px;
+  --pl-header-height: 64px;
+  --pl-font: system-ui, 'Segoe UI', Roboto, sans-serif;
+
+  font-family: var(--pl-font);
+  color: var(--pl-text);
+  background: var(--pl-bg);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  width: 100%;
+  min-height: 100svh;
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--pl-font);
+  font-weight: 600;
+  color: var(--pl-text-strong);
+}
+
+p {
+  margin: 0;
+}
+
+button,
+input,
+select {
+  font: inherit;
+}
+
+a {
+  color: inherit;
+}
