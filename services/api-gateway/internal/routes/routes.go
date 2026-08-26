@@ -22,6 +22,7 @@ type Proxies struct {
 // Setup registers the explicit public allowlist and gateway health.
 func Setup(router *gin.Engine, p Proxies) {
 	router.Use(
+		middleware.CORS(),
 		middleware.RequestID(),
 		middleware.StripInternalToken(),
 		middleware.BlockInternal(),
@@ -48,6 +49,7 @@ func Setup(router *gin.Engine, p Proxies) {
 	forward(router, http.MethodPost, "/admin/users", p.User)
 
 	// Merchant
+	forward(router, http.MethodGet, "/merchants", p.Merchant)
 	forward(router, http.MethodGet, "/merchant/profile", p.Merchant)
 	forward(router, http.MethodPost, "/admin/merchants", p.Merchant)
 	forward(router, http.MethodGet, "/admin/merchants", p.Merchant)

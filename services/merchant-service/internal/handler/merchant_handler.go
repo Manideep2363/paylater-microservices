@@ -30,6 +30,12 @@ type publicMerchantResponse struct {
 	CommissionPercentage string `json:"commission_percentage"`
 }
 
+// userMerchantResponse is the limited merchant projection for authenticated users.
+type userMerchantResponse struct {
+	MerchantID int32  `json:"merchant_id"`
+	Name       string `json:"name"`
+}
+
 type internalMerchantResponse struct {
 	MerchantID           int32  `json:"merchant_id"`
 	Name                 string `json:"name"`
@@ -134,6 +140,25 @@ func (h *MerchantHandler) ListMerchants(c *gin.Context) {
 	out := make([]publicMerchantResponse, 0, len(merchants))
 	for _, m := range merchants {
 		out = append(out, toPublic(m))
+	}
+	response.JSON(c, http.StatusOK, out)
+}
+
+// ListMerchantsForUser handles GET /merchants for authenticated users.
+// Returns only merchant_id and name for the purchase flow.
+func (h *MerchantHandler) ListMerchantsForUser(c *gin.Context) {
+	merchants, err := h.service.ListMerchants(c.Request.Context())
+	if err != nil {
+		response.Error(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	out := make([]userMerchantResponse, 0, len(merchants))
+	for _, m := range merchants {
+		out = append(out, userMerchantResponse{
+			MerchantID: m.MerchantID,
+			Name:       m.Name,
+		})
 	}
 	response.JSON(c, http.StatusOK, out)
 }

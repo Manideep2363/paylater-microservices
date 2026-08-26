@@ -1,0 +1,199 @@
+.merchant-register-page {
+  --merchant-register-bg: #f4f6f8;
+  --merchant-register-surface: #ffffff;
+  --merchant-register-text: #4b5563;
+  --merchant-register-text-strong: #111827;
+  --merchant-register-border: #d7dde5;
+  --merchant-register-accent: #0f3d5e;
+  --merchant-register-accent-hover: #0b3049;
+  --merchant-register-error: #b42318;
+  --merchant-register-error-bg: #fef3f2;
+  --merchant-register-success: #067647;
+  --merchant-register-success-bg: #ecfdf3;
+  --merchant-register-radius: 10px;
+  --merchant-register-space-xs: 8px;
+  --merchant-register-space-sm: 12px;
+  --merchant-register-space-md: 16px;
+  --merchant-register-space-lg: 24px;
+  --merchant-register-space-xl: 32px;
+  --merchant-register-shadow: 0 8px 24px rgba(17, 24, 39, 0.08);
+
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--merchant-register-space-lg);
+  background: var(--merchant-register-bg);
+  color: var(--merchant-register-text);
+  box-sizing: border-box;
+}
+
+.merchant-register-page__card {
+  width: 100%;
+  max-width: 420px;
+  padding: var(--merchant-register-space-xl);
+  background: var(--merchant-register-surface);
+  border: 1px solid var(--merchant-register-border);
+  border-radius: var(--merchant-register-radius);
+  box-shadow: var(--merchant-register-shadow);
+}
+
+.merchant-register-page__header {
+  margin-bottom: var(--merchant-register-space-lg);
+}
+
+.merchant-register-page__brand {
+  margin: 0 0 var(--merchant-register-space-sm);
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--merchant-register-accent);
+}
+
+.merchant-register-page__title {
+  margin: 0 0 var(--merchant-register-space-xs);
+  font-size: 1.75rem;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  color: var(--merchant-register-text-strong);
+}
+
+.merchant-register-page__subtitle {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.45;
+}
+
+.merchant-register-page__form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--merchant-register-space-md);
+}
+
+.merchant-register-page__field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.merchant-register-page__field label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--merchant-register-text-strong);
+}
+
+.merchant-register-page__field input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px 14px;
+  border: 1px solid var(--merchant-register-border);
+  border-radius: var(--merchant-register-radius);
+  background: var(--merchant-register-surface);
+  color: var(--merchant-register-text-strong);
+  font: inherit;
+}
+
+.merchant-register-page__field input::placeholder {
+  color: #9aa3af;
+}
+
+.merchant-register-page__field input:focus {
+  outline: 2px solid var(--merchant-register-accent);
+  outline-offset: 1px;
+  border-color: var(--merchant-register-accent);
+}
+
+.merchant-register-page__field input:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.merchant-register-page__error {
+  margin: 0;
+  padding: var(--merchant-register-space-sm) var(--merchant-register-space-md);
+  border-radius: var(--merchant-register-radius);
+  background: var(--merchant-register-error-bg);
+  color: var(--merchant-register-error);
+  font-size: 0.9rem;
+}
+
+.merchant-register-page__success {
+  display: flex;
+  flex-direction: column;
+  gap: var(--merchant-register-space-md);
+  padding: var(--merchant-register-space-md);
+  border-radius: var(--merchant-register-radius);
+  background: var(--merchant-register-success-bg);
+  color: var(--merchant-register-success);
+  font-size: 0.95rem;
+}
+
+.merchant-register-page__success p {
+  margin: 0;
+}
+
+.merchant-register-page__submit {
+  margin-top: var(--merchant-register-space-xs);
+  width: 100%;
+  min-height: 46px;
+  padding: 12px 16px;
+  border: none;
+  border-radius: var(--merchant-register-radius);
+  background: var(--merchant-register-accent);
+  color: #ffffff;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.merchant-register-page__submit:hover:not(:disabled) {
+  background: var(--merchant-register-accent-hover);
+}
+
+.merchant-register-page__submit:disabled {
+  opacity: 0.75;
+  cursor: wait;
+}
+
+.merchant-register-page__submit:focus-visible {
+  outline: 2px solid var(--merchant-register-accent);
+  outline-offset: 2px;
+}
+
+.merchant-register-page__footer {
+  margin-top: var(--merchant-register-space-lg);
+  font-size: 0.9rem;
+}
+
+.merchant-register-page__link {
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--merchant-register-accent);
+  font: inherit;
+  font-weight: 600;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.merchant-register-page__link:hover {
+  color: var(--merchant-register-accent-hover);
+}
+
+@media (max-width: 480px) {
+  .merchant-register-page {
+    padding: var(--merchant-register-space-md);
+    align-items: stretch;
+  }
+
+  .merchant-register-page__card {
+    max-width: none;
+    padding: var(--merchant-register-space-lg);
+    box-shadow: none;
+  }
+
+  .merchant-register-page__title {
+    font-size: 1.5rem;
+  }
+}

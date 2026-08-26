@@ -18,6 +18,13 @@ func Setup(router *gin.Engine, h *handler.MerchantHandler, jwtSecret string) {
 		})
 	})
 
+	user := router.Group("/")
+	user.Use(
+		middleware.AuthMiddleware(jwtSecret),
+		middleware.RequireRole("user"),
+	)
+	user.GET("/merchants", h.ListMerchantsForUser)
+
 	merchant := router.Group("/merchant")
 	merchant.Use(
 		middleware.AuthMiddleware(jwtSecret),

@@ -63,7 +63,7 @@ services:
   # Merchant Service
   # =========================================================
   merchant-service:
-    image: manideep2363/paylater-merchant-service:v1
+    image: manideep2363/paylater-merchant-service:v2
     container_name: paylater-merchant
 
     environment:
@@ -194,7 +194,7 @@ services:
   # API Gateway
   # =========================================================
   api-gateway:
-    image: manideep2363/paylater-api-gateway:v1
+    image: manideep2363/paylater-api-gateway:v3
     container_name: paylater-gateway
 
     environment:

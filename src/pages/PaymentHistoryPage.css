@@ -1,0 +1,204 @@
+.payment-history-page {
+  --history-bg: #f4f6f8;
+  --history-surface: #ffffff;
+  --history-text: #4b5563;
+  --history-text-strong: #111827;
+  --history-border: #d7dde5;
+  --history-accent: #0f3d5e;
+  --history-error: #b42318;
+  --history-error-bg: #fef3f2;
+  --history-radius: 10px;
+  --history-space-md: 16px;
+  --history-space-lg: 24px;
+  --history-space-xl: 32px;
+
+  min-height: 100svh;
+  background: var(--history-bg);
+  color: var(--history-text);
+  box-sizing: border-box;
+}
+
+.payment-history-page__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--history-space-md);
+  padding: var(--history-space-lg) var(--history-space-xl);
+  background: var(--history-surface);
+  border-bottom: 1px solid var(--history-border);
+}
+
+.payment-history-page__brand {
+  margin: 0 0 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--history-accent);
+}
+
+.payment-history-page__title {
+  margin: 0 0 4px;
+  font-size: 1.75rem;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  color: var(--history-text-strong);
+}
+
+.payment-history-page__subtitle {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.payment-history-page__secondary {
+  min-height: 40px;
+  padding: 8px 14px;
+  border: 1px solid var(--history-border);
+  border-radius: var(--history-radius);
+  background: var(--history-surface);
+  color: var(--history-text-strong);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.payment-history-page__secondary:hover {
+  border-color: var(--history-accent);
+  color: var(--history-accent);
+}
+
+.payment-history-page__secondary:focus-visible {
+  outline: 2px solid var(--history-accent);
+  outline-offset: 2px;
+}
+
+.payment-history-page__main {
+  padding: var(--history-space-xl);
+}
+
+.payment-history-page__status {
+  margin: 0;
+}
+
+.payment-history-page__error {
+  margin: 0;
+  max-width: 36rem;
+  padding: var(--history-space-md);
+  border-radius: var(--history-radius);
+  background: var(--history-error-bg);
+  color: var(--history-error);
+}
+
+.payment-history-page__empty {
+  max-width: 36rem;
+  padding: var(--history-space-lg);
+  background: var(--history-surface);
+  border: 1px solid var(--history-border);
+  border-radius: var(--history-radius);
+}
+
+.payment-history-page__empty-title {
+  margin: 0 0 8px;
+  font-size: 1.15rem;
+  color: var(--history-text-strong);
+}
+
+.payment-history-page__empty p {
+  margin: 0;
+}
+
+.payment-history-page__card {
+  max-width: 48rem;
+  padding: var(--history-space-lg);
+  background: var(--history-surface);
+  border: 1px solid var(--history-border);
+  border-radius: var(--history-radius);
+}
+
+.payment-history-page__section-title {
+  margin: 0 0 var(--history-space-md);
+  font-size: 1.15rem;
+  color: var(--history-text-strong);
+}
+
+.payment-history-page__table-wrap {
+  overflow-x: auto;
+}
+
+.payment-history-page__table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.payment-history-page__table th,
+.payment-history-page__table td {
+  padding: 12px 10px;
+  border-bottom: 1px solid var(--history-border);
+  vertical-align: top;
+}
+
+.payment-history-page__table th {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--history-text-strong);
+}
+
+.payment-history-page__table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+@media (max-width: 640px) {
+  .payment-history-page__header {
+    flex-direction: column;
+    padding: var(--history-space-md);
+  }
+
+  .payment-history-page__main {
+    padding: var(--history-space-md);
+  }
+
+  .payment-history-page__title {
+    font-size: 1.5rem;
+  }
+
+  .payment-history-page__secondary {
+    width: 100%;
+  }
+
+  .payment-history-page__table thead {
+    display: none;
+  }
+
+  .payment-history-page__table,
+  .payment-history-page__table tbody,
+  .payment-history-page__table tr,
+  .payment-history-page__table td {
+    display: block;
+    width: 100%;
+  }
+
+  .payment-history-page__table tr {
+    padding: 12px 0;
+    border-bottom: 1px solid var(--history-border);
+  }
+
+  .payment-history-page__table tbody tr:last-child {
+    border-bottom: none;
+  }
+
+  .payment-history-page__table td {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 6px 0;
+    border-bottom: none;
+  }
+
+  .payment-history-page__table td::before {
+    content: attr(data-label);
+    font-weight: 600;
+    color: var(--history-text-strong);
+  }
+}

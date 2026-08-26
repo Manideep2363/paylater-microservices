@@ -1,0 +1,92 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ledger-service
+  namespace: paylater
+
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app: ledger-service
+
+  template:
+    metadata:
+      labels:
+        app: ledger-service
+
+    spec:
+      containers:
+        - name: ledger-service
+          image: manideep2363/paylater-ledger-service:v1
+
+          ports:
+            - containerPort: 8084
+
+          env:
+            - name: SERVER_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: paylater-config
+                  key: SERVER_PORT_LEDGER
+
+            - name: DB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: paylater-config
+                  key: DB_HOST
+
+            - name: DB_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: paylater-config
+                  key: DB_PORT
+
+            - name: DB_NAME
+              value: "paylater_ledger"
+
+            - name: DB_USER
+              value: "root"
+
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: paylater-secret
+                  key: DB_PASSWORD
+
+            - name: USER_SERVICE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: paylater-config
+                  key: USER_SERVICE_URL
+
+            - name: MERCHANT_SERVICE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: paylater-config
+                  key: MERCHANT_SERVICE_URL
+
+            - name: INTERNAL_API_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: paylater-secret
+                  key: INTERNAL_API_TOKEN
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: ledger-service
+  namespace: paylater
+
+spec:
+  selector:
+    app: ledger-service
+
+  ports:
+    - port: 8084
+      targetPort: 8084
+
+  type: ClusterIP

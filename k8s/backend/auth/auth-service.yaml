@@ -1,0 +1,86 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: auth-service
+  namespace: paylater
+
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app: auth-service
+
+  template:
+    metadata:
+      labels:
+        app: auth-service
+
+    spec:
+      containers:
+        - name: auth-service
+          image: manideep2363/paylater-auth-service:v1
+
+          ports:
+            - containerPort: 8081
+
+          env:
+            - name: SERVER_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: paylater-config
+                  key: SERVER_PORT_AUTH
+
+            - name: USER_SERVICE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: paylater-config
+                  key: USER_SERVICE_URL
+
+            - name: MERCHANT_SERVICE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: paylater-config
+                  key: MERCHANT_SERVICE_URL
+
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: paylater-secret
+                  key: JWT_SECRET
+
+            - name: INTERNAL_API_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: paylater-secret
+                  key: INTERNAL_API_TOKEN
+
+            - name: ADMIN_EMAIL
+              valueFrom:
+                secretKeyRef:
+                  name: paylater-secret
+                  key: ADMIN_EMAIL
+
+            - name: ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: paylater-secret
+                  key: ADMIN_PASSWORD
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: auth-service
+  namespace: paylater
+
+spec:
+  selector:
+    app: auth-service
+
+  ports:
+    - port: 8081
+      targetPort: 8081
+
+  type: ClusterIP

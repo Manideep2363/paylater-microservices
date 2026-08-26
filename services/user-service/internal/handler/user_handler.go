@@ -130,7 +130,7 @@ func (h *UserHandler) CreateUser(c *gin.Context) {
 			response.Error(c, http.StatusBadRequest, err.Error())
 			return
 		}
-		response.Error(c, http.StatusBadRequest, err.Error())
+		response.Error(c, http.StatusInternalServerError, err.Error())
 		return
 	}
 
@@ -151,7 +151,7 @@ func (h *UserHandler) InternalCreateUser(c *gin.Context) {
 			response.Error(c, http.StatusBadRequest, err.Error())
 			return
 		}
-		response.Error(c, http.StatusBadRequest, err.Error())
+		response.Error(c, http.StatusInternalServerError, err.Error())
 		return
 	}
 

@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: paylater-config
+  namespace: paylater
+
+data:
+  DB_HOST: mysql
+  DB_PORT: "3306"
+
+  USER_SERVICE_URL: http://user-service:8082
+  MERCHANT_SERVICE_URL: http://merchant-service:8083
+  LEDGER_SERVICE_URL: http://ledger-service:8084
+  REPORT_SERVICE_URL: http://report-service:8085
+  AUTH_SERVICE_URL: http://auth-service:8081
+
+  SERVER_PORT: "8080"
+  SERVER_PORT_AUTH: "8081"
+  SERVER_PORT_USER: "8082"
+  SERVER_PORT_MERCHANT: "8083"
+  SERVER_PORT_LEDGER: "8084"
+  SERVER_PORT_REPORT: "8085"

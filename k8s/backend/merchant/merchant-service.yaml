@@ -1,0 +1,80 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: merchant-service
+  namespace: paylater
+
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app: merchant-service
+
+  template:
+    metadata:
+      labels:
+        app: merchant-service
+
+    spec:
+      containers:
+        - name: merchant-service
+          image: manideep2363/paylater-merchant-service:v2
+
+          ports:
+            - containerPort: 8083
+
+          env:
+            - name: SERVER_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: paylater-config
+                  key: SERVER_PORT_MERCHANT
+
+            - name: DB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: paylater-config
+                  key: DB_HOST
+
+            - name: DB_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: paylater-config
+                  key: DB_PORT
+
+            - name: DB_NAME
+              value: "paylater_merchants"
+
+            - name: DB_USER
+              value: "root"
+
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: paylater-secret
+                  key: DB_PASSWORD
+
+            - name: INTERNAL_API_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: paylater-secret
+                  key: INTERNAL_API_TOKEN
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: merchant-service
+  namespace: paylater
+
+spec:
+  selector:
+    app: merchant-service
+
+  ports:
+    - port: 8083
+      targetPort: 8083
+
+  type: ClusterIP

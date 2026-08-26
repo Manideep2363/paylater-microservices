@@ -34,7 +34,17 @@ Not used: `JWT_SECRET`, `INTERNAL_API_TOKEN`, `DB_*`.
 
 ## CORS
 
-Not configured in Phase 7 (Postman). Add later for browser frontends.
+Gin middleware allows the Vite React app in development:
+
+| Variable | Default |
+|----------|---------|
+| `CORS_ALLOWED_ORIGIN` | `http://localhost:5173` |
+
+Allowed methods: `GET`, `POST`, `PUT`, `DELETE`, `OPTIONS`.  
+Allowed headers: `Content-Type`, `Authorization`, `X-Request-ID`.  
+OPTIONS preflight is answered by the gateway (204) and is not proxied.
+
+**Production:** set `CORS_ALLOWED_ORIGIN` to your real frontend origin (e.g. `https://app.example.com`). Never use `*`.
 
 ## Run with all services
 

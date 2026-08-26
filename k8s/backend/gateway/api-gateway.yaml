@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-gateway
+  namespace: paylater
+
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app: api-gateway
+
+  template:
+    metadata:
+      labels:
+        app: api-gateway
+
+    spec:
+      containers:
+        - name: api-gateway
+          image: manideep2363/paylater-api-gateway:v3
+          imagePullPolicy: Always
+
+          ports:
+            - containerPort: 8080
+
+          envFrom:
+            - configMapRef:
+                name: paylater-config
+
+            - secretRef:
+                name: paylater-secret
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: api-gateway
+  namespace: paylater
+
+spec:
+  selector:
+    app: api-gateway
+
+  ports:
+    - port: 8080
+      targetPort: 8080
+
+  type: ClusterIP

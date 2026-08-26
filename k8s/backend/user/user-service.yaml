@@ -1,0 +1,86 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-service
+  namespace: paylater
+
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app: user-service
+
+  template:
+    metadata:
+      labels:
+        app: user-service
+
+    spec:
+      containers:
+        - name: user-service
+          image: manideep2363/paylater-user-service:v2
+
+          ports:
+            - containerPort: 8082
+
+          env:
+            - name: SERVER_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: paylater-config
+                  key: SERVER_PORT_USER
+
+            - name: DB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: paylater-config
+                  key: DB_HOST
+
+            - name: DB_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: paylater-config
+                  key: DB_PORT
+
+            - name: DB_NAME
+              value: "paylater_users"
+
+            - name: DB_USER
+              value: "root"
+
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: paylater-secret
+                  key: DB_PASSWORD
+
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: paylater-secret
+                  key: JWT_SECRET
+
+            - name: INTERNAL_API_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: paylater-secret
+                  key: INTERNAL_API_TOKEN
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: user-service
+  namespace: paylater
+
+spec:
+  selector:
+    app: user-service
+
+  ports:
+    - port: 8082
+      targetPort: 8082
+
+  type: ClusterIP

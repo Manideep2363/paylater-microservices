@@ -105,6 +105,7 @@ func TestRouting_Allowlist(t *testing.T) {
 		{"purchases", http.MethodPost, "/purchases", "ledger"},
 		{"payments", http.MethodPost, "/payments", "ledger"},
 		{"merchant_profile", http.MethodGet, "/merchant/profile", "merchant"},
+		{"user_merchants", http.MethodGet, "/merchants", "merchant"},
 		{"admin_users", http.MethodGet, "/admin/users", "user"},
 		{"admin_merchants", http.MethodGet, "/admin/merchants", "merchant"},
 		{"report_outstanding", http.MethodGet, "/admin/reports/outstanding-balance", "report"},

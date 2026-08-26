@@ -1,0 +1,68 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: report-service
+  namespace: paylater
+
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app: report-service
+
+  template:
+    metadata:
+      labels:
+        app: report-service
+
+    spec:
+      containers:
+        - name: report-service
+          image: manideep2363/paylater-report-service:v1
+
+          ports:
+            - containerPort: 8085
+
+          env:
+            - name: SERVER_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: paylater-config
+                  key: SERVER_PORT_REPORT
+
+            - name: USER_SERVICE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: paylater-config
+                  key: USER_SERVICE_URL
+
+            - name: LEDGER_SERVICE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: paylater-config
+                  key: LEDGER_SERVICE_URL
+
+            - name: INTERNAL_API_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: paylater-secret
+                  key: INTERNAL_API_TOKEN
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: report-service
+  namespace: paylater
+
+spec:
+  selector:
+    app: report-service
+
+  ports:
+    - port: 8085
+      targetPort: 8085
+
+  type: ClusterIP
