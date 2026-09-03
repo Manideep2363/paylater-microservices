@@ -33,6 +33,8 @@ services/*/.env
 
 # Kubernetes secrets
 k8s/config/secret.yaml
+k8s/config/secret.*.yaml
+!k8s/config/secret.example.yaml
 
 # Credentials / tokens
 *_token.json
