@@ -1,0 +1,62 @@
+version: 0.2
+
+env:
+  variables:
+    AWS_DEFAULT_REGION: ap-south-1
+    AWS_ACCOUNT_ID: "752651104026"
+
+phases:
+  pre_build:
+    commands:
+      - echo "Logging in to Amazon ECR..."
+      - aws ecr get-login-password --region "$AWS_DEFAULT_REGION" | docker login --username AWS --password-stdin "$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com"
+      - echo "ECR login successful."
+
+  build:
+    commands:
+      - echo "Build started on $(date)"
+      - echo "Building API Gateway..."
+      - docker build -f services/api-gateway/Dockerfile -t "$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/paylater-api-gateway:$CODEBUILD_RESOLVED_SOURCE_VERSION" .
+
+      - echo "Building Auth Service..."
+      - docker build -f services/auth-service/Dockerfile -t "$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/paylater-auth-service:$CODEBUILD_RESOLVED_SOURCE_VERSION" .
+
+      - echo "Building User Service..."
+      - docker build -f services/user-service/Dockerfile -t "$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/paylater-user-service:$CODEBUILD_RESOLVED_SOURCE_VERSION" .
+
+      - echo "Building Merchant Service..."
+      - docker build -f services/merchant-service/Dockerfile -t "$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/paylater-merchant-service:$CODEBUILD_RESOLVED_SOURCE_VERSION" .
+
+      - echo "Building Ledger Service..."
+      - docker build -f services/ledger-service/Dockerfile -t "$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/paylater-ledger-service:$CODEBUILD_RESOLVED_SOURCE_VERSION" .
+
+      - echo "Building Report Service..."
+      - docker build -f services/report-service/Dockerfile -t "$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/paylater-report-service:$CODEBUILD_RESOLVED_SOURCE_VERSION" .
+
+      - echo "Building Frontend..."
+      - docker build -f paylater-UI/Dockerfile -t "$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/paylater-frontend:$CODEBUILD_RESOLVED_SOURCE_VERSION" paylater-UI
+
+  post_build:
+    commands:
+      - echo "Pushing API Gateway..."
+      - docker push "$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/paylater-api-gateway:$CODEBUILD_RESOLVED_SOURCE_VERSION"
+
+      - echo "Pushing Auth Service..."
+      - docker push "$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/paylater-auth-service:$CODEBUILD_RESOLVED_SOURCE_VERSION"
+
+      - echo "Pushing User Service..."
+      - docker push "$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/paylater-user-service:$CODEBUILD_RESOLVED_SOURCE_VERSION"
+
+      - echo "Pushing Merchant Service..."
+      - docker push "$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/paylater-merchant-service:$CODEBUILD_RESOLVED_SOURCE_VERSION"
+
+      - echo "Pushing Ledger Service..."
+      - docker push "$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/paylater-ledger-service:$CODEBUILD_RESOLVED_SOURCE_VERSION"
+
+      - echo "Pushing Report Service..."
+      - docker push "$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/paylater-report-service:$CODEBUILD_RESOLVED_SOURCE_VERSION"
+
+      - echo "Pushing Frontend..."
+      - docker push "$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/paylater-frontend:$CODEBUILD_RESOLVED_SOURCE_VERSION"
+
+      - echo "Build and push completed on $(date)"
