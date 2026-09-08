@@ -40,7 +40,7 @@ phases:
       - docker build -f services/report-service/Dockerfile -t "$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/paylater-report-service:$IMAGE_TAG" .
 
       - echo "Building Frontend..."
-      - docker build -f paylater-UI/Dockerfile -t "$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/paylater-frontend:$IMAGE_TAG" paylater-UI
+      - docker build -f paylater-ui/Dockerfile -t "$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/paylater-frontend:$IMAGE_TAG" paylater-UI
 
   post_build:
     commands:
