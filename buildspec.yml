@@ -4,6 +4,8 @@ env:
   variables:
     AWS_DEFAULT_REGION: ap-south-1
     AWS_ACCOUNT_ID: "752651104026"
+  exported-variables:
+    - IMAGE_TAG
 
 phases:
   pre_build:
@@ -12,51 +14,56 @@ phases:
       - aws ecr get-login-password --region "$AWS_DEFAULT_REGION" | docker login --username AWS --password-stdin "$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com"
       - echo "ECR login successful."
 
+      - export IMAGE_TAG="${CODEBUILD_RESOLVED_SOURCE_VERSION}-${CODEBUILD_BUILD_NUMBER}"
+      - echo "IMAGE_TAG=$IMAGE_TAG"
+
   build:
     commands:
       - echo "Build started on $(date)"
+
       - echo "Building API Gateway..."
-      - docker build -f services/api-gateway/Dockerfile -t "$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/paylater-api-gateway:$CODEBUILD_RESOLVED_SOURCE_VERSION" .
+      - docker build -f services/api-gateway/Dockerfile -t "$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/paylater-api-gateway:$IMAGE_TAG" .
 
       - echo "Building Auth Service..."
-      - docker build -f services/auth-service/Dockerfile -t "$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/paylater-auth-service:$CODEBUILD_RESOLVED_SOURCE_VERSION" .
+      - docker build -f services/auth-service/Dockerfile -t "$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/paylater-auth-service:$IMAGE_TAG" .
 
       - echo "Building User Service..."
-      - docker build -f services/user-service/Dockerfile -t "$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/paylater-user-service:$CODEBUILD_RESOLVED_SOURCE_VERSION" .
+      - docker build -f services/user-service/Dockerfile -t "$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/paylater-user-service:$IMAGE_TAG" .
 
       - echo "Building Merchant Service..."
-      - docker build -f services/merchant-service/Dockerfile -t "$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/paylater-merchant-service:$CODEBUILD_RESOLVED_SOURCE_VERSION" .
+      - docker build -f services/merchant-service/Dockerfile -t "$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/paylater-merchant-service:$IMAGE_TAG" .
 
       - echo "Building Ledger Service..."
-      - docker build -f services/ledger-service/Dockerfile -t "$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/paylater-ledger-service:$CODEBUILD_RESOLVED_SOURCE_VERSION" .
+      - docker build -f services/ledger-service/Dockerfile -t "$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/paylater-ledger-service:$IMAGE_TAG" .
 
       - echo "Building Report Service..."
-      - docker build -f services/report-service/Dockerfile -t "$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/paylater-report-service:$CODEBUILD_RESOLVED_SOURCE_VERSION" .
+      - docker build -f services/report-service/Dockerfile -t "$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/paylater-report-service:$IMAGE_TAG" .
 
       - echo "Building Frontend..."
-      - docker build -f paylater-UI/Dockerfile -t "$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/paylater-frontend:$CODEBUILD_RESOLVED_SOURCE_VERSION" paylater-UI
+      - docker build -f paylater-UI/Dockerfile -t "$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/paylater-frontend:$IMAGE_TAG" paylater-UI
 
   post_build:
     commands:
       - echo "Pushing API Gateway..."
-      - docker push "$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/paylater-api-gateway:$CODEBUILD_RESOLVED_SOURCE_VERSION"
+      - docker push "$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/paylater-api-gateway:$IMAGE_TAG"
 
       - echo "Pushing Auth Service..."
-      - docker push "$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/paylater-auth-service:$CODEBUILD_RESOLVED_SOURCE_VERSION"
+      - docker push "$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/paylater-auth-service:$IMAGE_TAG"
 
       - echo "Pushing User Service..."
-      - docker push "$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/paylater-user-service:$CODEBUILD_RESOLVED_SOURCE_VERSION"
+      - docker push "$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/paylater-user-service:$IMAGE_TAG"
 
       - echo "Pushing Merchant Service..."
-      - docker push "$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/paylater-merchant-service:$CODEBUILD_RESOLVED_SOURCE_VERSION"
+      - docker push "$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/paylater-merchant-service:$IMAGE_TAG"
 
       - echo "Pushing Ledger Service..."
-      - docker push "$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/paylater-ledger-service:$CODEBUILD_RESOLVED_SOURCE_VERSION"
+      - docker push "$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/paylater-ledger-service:$IMAGE_TAG"
 
       - echo "Pushing Report Service..."
-      - docker push "$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/paylater-report-service:$CODEBUILD_RESOLVED_SOURCE_VERSION"
+      - docker push "$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/paylater-report-service:$IMAGE_TAG"
 
       - echo "Pushing Frontend..."
-      - docker push "$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/paylater-frontend:$CODEBUILD_RESOLVED_SOURCE_VERSION"
+      - docker push "$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/paylater-frontend:$IMAGE_TAG"
 
       - echo "Build and push completed on $(date)"
+      - echo "Final IMAGE_TAG=$IMAGE_TAG"
